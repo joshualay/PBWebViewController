@@ -25,6 +25,11 @@
 
 @implementation PBWebViewController
 
+- (void)dealloc
+{
+    self.delegate = nil;
+}
+
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -258,6 +263,10 @@
 {
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     [self toggleState];
+
+    if ([self.delegate respondsToSelector:@selector(webViewController:didStartLoadingURL:)]) {
+        [self.delegate webViewController:self didStartLoadingURL:webView.request.URL];
+    }
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView
@@ -265,6 +274,10 @@
     [self finishLoad];
     self.title = [webView stringByEvaluatingJavaScriptFromString:@"document.title"];
     self.URL = self.webView.request.URL;
+
+    if ([self.delegate respondsToSelector:@selector(webViewController:didFinishLoadingURL:)]) {
+        [self.delegate webViewController:self didFinishLoadingURL:self.URL];
+    }
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error

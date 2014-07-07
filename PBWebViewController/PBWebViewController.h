@@ -8,12 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol PBWebViewControllerDelegate;
+
 /**
  * The `PBWebViewController` class is a view controller that displays the contents of a URL
  * along tith a navigation toolbar with buttons to stop/refresh the loading of the page
  * as well as buttons to go back, forward and to share the URL using a `UIActivityViewController`.
  */
 @interface PBWebViewController : UIViewController <UIWebViewDelegate>
+
+@property (weak, nonatomic) id<PBWebViewControllerDelegate> delegate;
 
 /**
  * The URL that will be loaded by the web view controller.
@@ -56,5 +60,13 @@
  * Clears the contents of the web view.
  */
 - (void)clear;
+
+@end
+
+@protocol PBWebViewControllerDelegate <NSObject>
+
+@optional
+- (void)webViewController:(PBWebViewController*)webViewController didStartLoadingURL:(NSURL*)url;
+- (void)webViewController:(PBWebViewController*)webViewController didFinishLoadingURL:(NSURL*)url;
 
 @end
