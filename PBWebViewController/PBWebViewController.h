@@ -68,5 +68,6 @@
 @optional
 - (void)webViewController:(PBWebViewController*)webViewController didStartLoadingURL:(NSURL*)url;
 - (void)webViewController:(PBWebViewController*)webViewController didFinishLoadingURL:(NSURL*)url;
+- (void)webViewController:(PBWebViewController *)webViewController didFailLoadingURL:(NSURL*)url;
 
 @end

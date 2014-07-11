@@ -11,6 +11,7 @@
 @interface PBWebViewController () <UIPopoverControllerDelegate>
 
 @property (strong, nonatomic) UIWebView *webView;
+@property (strong, nonatomic) UIActivityIndicatorView* activityIndicatorView;
 
 @property (strong, nonatomic) UIBarButtonItem *stopLoadingButton;
 @property (strong, nonatomic) UIBarButtonItem *reloadButton;
@@ -55,6 +56,14 @@
 
 - (void)load
 {
+    if (self.activityIndicatorView == nil) {
+        self.activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        self.activityIndicatorView.frame = CGRectMake(0, 0, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame));
+        self.activityIndicatorView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+        self.activityIndicatorView.hidesWhenStopped = YES;
+        [self.view addSubview:self.activityIndicatorView];
+    }
+
     NSURLRequest *request = [NSURLRequest requestWithURL:self.URL cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:4.0];
     [self.webView loadRequest:request];
     
@@ -220,10 +229,6 @@
 {
     [self toggleState];
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-
-    if ([self.delegate respondsToSelector:@selector(webViewController:didFinishLoadingURL:)]) {
-        [self.delegate webViewController:self didFinishLoadingURL:self.URL];
-    }
 }
 
 #pragma mark - Button actions
@@ -268,6 +273,8 @@
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     [self toggleState];
 
+    [self.activityIndicatorView startAnimating];
+
     if ([self.delegate respondsToSelector:@selector(webViewController:didStartLoadingURL:)]) {
         [self.delegate webViewController:self didStartLoadingURL:webView.request.URL];
     }
@@ -278,11 +285,23 @@
     self.title = [webView stringByEvaluatingJavaScriptFromString:@"document.title"];
     self.URL = self.webView.request.URL;
 
+    [self.activityIndicatorView stopAnimating];
+
+    if ([self.delegate respondsToSelector:@selector(webViewController:didFinishLoadingURL:)]) {
+        [self.delegate webViewController:self didFinishLoadingURL:self.URL];
+    }
+
     [self finishLoad];
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
+    [self.activityIndicatorView stopAnimating];
+
+    if ([self.delegate respondsToSelector:@selector(webViewController:didFailLoadingURL:)]) {
+        [self.delegate webViewController:self didFailLoadingURL:webView.request.URL];
+    }
+
     [self finishLoad];
 }
 
