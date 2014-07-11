@@ -220,6 +220,10 @@
 {
     [self toggleState];
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+
+    if ([self.delegate respondsToSelector:@selector(webViewController:didFinishLoadingURL:)]) {
+        [self.delegate webViewController:self didFinishLoadingURL:self.URL];
+    }
 }
 
 #pragma mark - Button actions
@@ -271,13 +275,10 @@
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
-    [self finishLoad];
     self.title = [webView stringByEvaluatingJavaScriptFromString:@"document.title"];
     self.URL = self.webView.request.URL;
 
-    if ([self.delegate respondsToSelector:@selector(webViewController:didFinishLoadingURL:)]) {
-        [self.delegate webViewController:self didFinishLoadingURL:self.URL];
-    }
+    [self finishLoad];
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
