@@ -49,6 +49,8 @@
  */
 @property (assign, nonatomic) BOOL showsNavigationToolbar;
 
+@property (assign, nonatomic) NSTimeInterval timeoutInterval;
+
 /**
  * Loads the given `URL`.
  * This is called automatically when the when the web view appears if a `URL` exists,

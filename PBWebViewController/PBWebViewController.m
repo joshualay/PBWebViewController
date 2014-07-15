@@ -52,6 +52,7 @@
 - (void)commonInit
 {
     _showsNavigationToolbar = YES;
+    _timeoutInterval = 4.0;
 }
 
 - (void)load
@@ -64,7 +65,7 @@
         [self.view addSubview:self.activityIndicatorView];
     }
 
-    NSURLRequest *request = [NSURLRequest requestWithURL:self.URL cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:4.0];
+    NSURLRequest *request = [NSURLRequest requestWithURL:self.URL cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:self.timeoutInterval];
     [self.webView loadRequest:request];
     
     if (self.navigationController.toolbarHidden) {
