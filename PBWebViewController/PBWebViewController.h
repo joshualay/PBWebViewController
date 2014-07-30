@@ -49,6 +49,8 @@
  */
 @property (assign, nonatomic) BOOL showsNavigationToolbar;
 
+@property (assign, nonatomic) BOOL showsActionButton;
+
 @property (assign, nonatomic) NSTimeInterval timeoutInterval;
 
 /**

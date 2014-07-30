@@ -53,6 +53,7 @@
 {
     _showsNavigationToolbar = YES;
     _timeoutInterval = 4.0;
+    _showsActionButton = YES;
 }
 
 - (void)load
@@ -208,8 +209,11 @@
                                                                             target:nil
                                                                             action:nil];
     space_.width = 60.0f;
-    
-    self.toolbarItems = @[self.stopLoadingButton, space, self.backButton, space_, self.forwardButton, space, actionButton];
+
+    if (self.showsActionButton)
+        self.toolbarItems = @[self.stopLoadingButton, space, self.backButton, space_, self.forwardButton, space, actionButton];
+    else
+        self.toolbarItems = @[self.stopLoadingButton, space, self.backButton, space_, self.forwardButton, space];
 }
 
 - (void)toggleState
